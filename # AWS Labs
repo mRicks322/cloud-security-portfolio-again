@@ -1,3 +1,19 @@
-aws/README/md
-AWS Soulutions Architect Associate Part 2 
-Set a date
+# main.tf
+# This block tells Terraform which cloud provider to use
+provider "aws" {
+  region = "us-east-1"
+}
+
+# This creates an S3 bucket to store CloudTrail logs
+resource "aws_s3_bucket" "trail_logs" {
+  bucket = "malik-threat-pipeline-logs"
+}
+
+# This creates the actual CloudTrail — it watches account activity
+resource "aws_cloudtrail" "main_trail" {
+  name                          = "threat-detection-trail"
+  s3_bucket_name                = aws_s3_bucket.trail_logs.id
+  include_global_service_events = true
+  is_multi_region_trail         = true
+}
+
